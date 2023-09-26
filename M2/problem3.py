@@ -1,19 +1,19 @@
-a1 = [10.001, 11.591, 0.011, 5.991, 16.121, 0.131, 100.981, 1.001]
-a2 = [1.99, 1.99, 0.99, 1.99, 0.99, 1.99, 0.99, 0.99]
-a3 = [0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01]
-a4 = [10.01, -12.22, 0.23, 19.20, -5.13, 3.12]
+a1 = [-1, -2, -3, -4, -5, -6, -7, -8, -9, -10]
+a2 = [-1, 1, -2, 2, 3, -3, -4, 5]
+a3 = [-0.01, -0.0001, -.15]
+a4 = ["-1", "2", "-3", "4", "-5", "5", "-6", "6", "-7", "7"]
 
 
 def process_array(num, arr):
     print("\nProcessing Array({}): \n\n".format(num))
     print(arr)
-    total = 0.00
+    print("\nPositive Output:\n")
     # Note: use the arr variable; don't directly refer to a1-a4 variables
-    # TODO add necessary code here for sum; every number must have two decimal places shown (i.e., 0.10, 0.01, 0.00)
-    print("\nThe total is {}:\n".format(total))
+    # TODO add new code here to print the desired result
+    # TODO include the type() of the output data to ensure the result is positive AND the same datatype as the input value
 
 
-print("Problem 2")
+print("Problem 3")
 process_array(1, a1)
 process_array(2, a2)
 process_array(3, a3)
