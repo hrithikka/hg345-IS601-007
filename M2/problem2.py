@@ -10,6 +10,10 @@ def process_array(num, arr):
     total = 0.00
     # Note: use the arr variable; don't directly refer to a1-a4 variables
     # TODO add necessary code here for sum; every number must have two decimal places shown (i.e., 0.10, 0.01, 0.00)
+    for num in arr:
+        total += num
+    
+    total = "{:.2f}".format(total)
     print("\nThe total is {}:\n".format(total))
 
 
@@ -18,3 +22,5 @@ process_array(1, a1)
 process_array(2, a2)
 process_array(3, a3)
 process_array(4, a4)
+
+# Hrithikka UCID:hg345 Date:09/25 Showing the output of the sum of the individual arrauys upto 2decimals

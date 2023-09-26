@@ -10,7 +10,9 @@ def process_array(num, arr):
     print("\nOdds output:\n")
     # Note: use the arr variable; don't directly refer to a1-a4 variables
     # TODO add necessary print statement to output only the odd values (hint, best if shown as a single line)
-    
+    odd_values = [str(val) for val in arr if val % 2 != 0]
+    odd_output = ', '.join(odd_values)
+    print(odd_output)
 
 
 print("Problem 1")
@@ -18,3 +20,5 @@ process_array(1, a1)
 process_array(2, a2)
 process_array(3, a3)
 process_array(4, a4)
+
+# Hrithikka UCID:hg345 Date:09/25 Showing the output of odd values
