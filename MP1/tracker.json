@@ -4,20 +4,41 @@
         "due": "2023-10-09 23:59:59",
         "lastActivity": "2023-10-09 21:57:51.188786",
         "description": "Task1 description for the Tracker.",
-        "done": false
+        "done": "2023-10-09 23:15:51.568313"
     },
     {
         "name": "Task2",
         "due": "2023-10-10 23:59:59",
         "lastActivity": "2023-10-09 22:32:37.174234",
         "description": "Task2 description.",
-        "done": false
+        "done": "2023-10-09 23:59:04.627448"
     },
     {
         "name": "Task3",
         "due": "2023-10-08 23:59:59",
         "lastActivity": "2023-10-09 22:31:31.970972",
         "description": "Task3 description for the Tracker.",
+        "done": "2023-10-10 00:03:46.667196"
+    },
+    {
+        "name": "Task4",
+        "due": "10/09/23 23:59:59",
+        "lastActivity": "2023-10-10 00:24:44.480486",
+        "description": "Task4 description.",
+        "done": "2023-10-10 00:34:21.088832"
+    },
+    {
+        "name": "Task5",
+        "due": "2023-10-07 23:59:59",
+        "lastActivity": "2023-10-10 00:42:04.051211",
+        "description": "Task5 description",
+        "done": false
+    },
+    {
+        "name": "Task6",
+        "due": "2023-10-11 23:59:59",
+        "lastActivity": "2023-10-10 00:42:36.566516",
+        "description": "Task6 description",
         "done": false
     }
 ]
