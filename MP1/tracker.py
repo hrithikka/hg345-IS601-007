@@ -21,24 +21,29 @@ def str_to_datetime(datetime_str):
     except:
         return datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S')
 
+#updated save/load to generate the file in the same directory as this file
 def save():
     """ writes the tasks list to a json file to persist changes """
-    f = open("tracker.json", "w")
+    dir_path = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(dir_path, "tracker.json")
+    f = open(file_path, "w")
     f.write(json.dumps(tasks, indent=4, default=str))
     f.close()
 
+
 def load():
     """ loads the task list from a json file """
-    if not os.path.isfile("tracker.json"):
+    dir_path = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(dir_path, "tracker.json")
+    if not os.path.isfile(file_path):
         return
-    f = open("tracker.json", "r")
-    
+    f = open(file_path, "r")
     data = json.load(f)
     # Note about global keyword: https://stackoverflow.com/a/11867510
     global tasks
     tasks = data
     f.close()
-    print(f"data {data}")    
+    print(f"data {data}")
 
 def list_tasks(_tasks):
     """ List a summary view of all tasks """
