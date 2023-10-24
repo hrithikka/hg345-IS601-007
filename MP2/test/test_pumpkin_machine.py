@@ -47,14 +47,16 @@ def test_production_line(second_order):
 
 #UCID:hg345 DATE:10/23/2023
 #Test 1 - pumpkin must be the first selection (can't add face stencils or extrass without a pumpkin choice)
-#This test case checks if the machine is selecting the Pumpkin first and it throws an AssertionError when currently_selecting attribute is not in Pumpkin stage.
+#This test case checks if the machine is selecting the Pumpkin first and it throws an AssertionError 
+# when currently_selecting attribute is not in Pumpkin stage.
 def test_first_selection(machine):
     assert machine.currently_selecting.name == STAGE.Pumpkin.name
 
 #UCID:hg345 DATE:10/23/2023
 #Test 2 - can only add face stencils if they're in stock
 # This test case checks if there are face stencils in stock.
-# The initial no of face stencils is set to 1 and when 2 face stencils are selected, it throws OutOfStockException. 
+# The initial no of face stencils is set to 1 and when 2 
+# face stencils are selected, it throws OutOfStockException. 
 def test_face_stencils_in_stock(machine):
     machine.handle_pumpkin_choice("Small Pumpkin")  
     machine.face_stencils[0].quantity = 1 
@@ -82,7 +84,8 @@ def test_extras_in_stock(machine):
 
 # UCID:hg345 DATE:10/23/2023
 # Test 4 - Can add up to 3 face stencils of any combination
-# This test case is used so the face stencils are given a max value of 3, So the for loop only takes MAX_STENCILS-1 = 2 values and if the value > 2 and
+# This test case is used so the face stencils are given a max value of 3.
+# Thus the for loop only takes MAX_STENCILS-1 = 2 values and if the value > 2 and
 # if we try to order another stencil it will throw ExceededRemainingChoicesException.
 def test_max_face_stencils(machine):
     machine.face_stencils[0].quantity=3
@@ -109,9 +112,11 @@ def test_max_extras(machine):
     except ExceededRemainingChoicesException:
         assert False
 #UCID:hg345 DATE:10/23/2023
-# Test 6 - cost must be calculated properly based on the choices (check for currency format as part of this) (test case should have a few permutations of at least 3 valid pumpkins [hint parameterized tests])
+# Test 6 - cost must be calculated properly based on the choices (check for currency format as part of this)
+#  (test case should have a few permutations of at least 3 valid pumpkins [hint parameterized tests])
 # Machine is INITIALLY reset using reset().
-# This test case is used to calculate the total cost. all the steps which include choosing pumpkin, stencils and extras are covered. And calculated accordingly
+# This test case is used to calculate the total cost. all the steps which include choosing pumpkin,
+#  stencils and extras are covered. And calculated accordingly
 
 def test_total_cost(machine):
     machine.reset()
@@ -125,9 +130,10 @@ def test_total_cost(machine):
     assert machine.calculate_cost() == 7.25
 
 #UCID:hg345 DATE:10/23/2023
-# Test 7 - Total Sales (sum of costs) must be calculated properly (test case should have a few permutations of at least 3 valid pumpkins [hint parameterized tests])
-# Multiple orders calculations are checked, this test case goes through all the steps which include choosing pumpkin, stencils and extras.
-# then calculates the cost using calculate_cost function. handle_pay is used for pay.
+# Test 7 - Total Sales (sum of costs) must be calculated properly (test case should have a few 
+# permutations of at least 3 valid pumpkins [hint parameterized tests])
+# Multiple orders calculations are checked, this test case goes through all the
+#  steps which include choosing pumpkin, stencils and extras.then calculates the cost using calculate_cost function. handle_pay is used for pay.
 #Here two or more orders are used 
 def test_total_sales(machine):
 # First order

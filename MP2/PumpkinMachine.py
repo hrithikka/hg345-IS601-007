@@ -199,7 +199,10 @@ class PumpkinMachine:
                 self.print_current_pumpkin()
             elif self.currently_selecting == STAGE.Pay:
                 expected = self.calculate_cost()
-                total = input(f"Your total is ${expected}, please enter the exact value.\n") #input() message should properly display the value in currency format 
+                expected_formatted = "${:.2f}".format(expected)  # Format the expected value as currency
+                #input() message should properly display the value in currency format 
+                total = input(f"Your total is {expected_formatted}, please enter the exact value.\n")
+                # UCID: hg345 DATE: 10/23/2023
                 self.handle_pay(expected, total)
 
                 choice = input("What would you like to do? (order or quit)\n")
