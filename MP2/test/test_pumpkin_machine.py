@@ -56,11 +56,11 @@ def test_first_selection(machine):
 # This test case checks if there are face stencils in stock.
 # The initial no of face stencils is set to 1 and when 2 face stencils are selected, it throws OutOfStockException. 
 def test_face_stencils_in_stock(machine):
-    machine.handle_pumpkin_choice("Mini Pumpkin")  
+    machine.handle_pumpkin_choice("Small Pumpkin")  
     machine.face_stencils[0].quantity = 1 
     
     try:
-        machine.handle_face_stencil_choice("Happy Face")
+        machine.handle_face_stencil_choice("Spooky Face")
         assert machine.face_stencils[0].quantity <= 1
     except OutOfStockException:
         assert False
@@ -71,11 +71,11 @@ def test_face_stencils_in_stock(machine):
 # The initial no of extras is set to 1 and when 2 face stencils are selected, it throws OutOfStockException.
 def test_extras_in_stock(machine):
     machine.extras[0].quantity = 1
-    machine.handle_pumpkin_choice("Mini Pumpkin")
+    machine.handle_pumpkin_choice("Medium Pumpkin")
     machine.handle_face_stencil_choice("next")
-    machine.handle_extra_choice("Dry Ice") 
+    machine.handle_extra_choice("Glitter") 
     try:
-        machine.handle_extra_choice("Dry Ice")
+        machine.handle_extra_choice("Glitter")
         assert machine.extras[0].quantity == 1
     except OutOfStockException:
         assert False
@@ -86,11 +86,11 @@ def test_extras_in_stock(machine):
 # if we try to order another stencil it will throw ExceededRemainingChoicesException.
 def test_max_face_stencils(machine):
     machine.face_stencils[0].quantity=3
-    machine.handle_pumpkin_choice("Mini Pumpkin")
+    machine.handle_pumpkin_choice("Large Pumpkin")
     for stencils in range(machine.MAX_STENCILS - 1):
-        machine.handle_face_stencil_choice("Toothy Face")
+        machine.handle_face_stencil_choice("Happy Face")
     try:
-        machine.handle_face_stencil_choice("Toothy Face")
+        machine.handle_face_stencil_choice("Happy Face")
         assert machine.remaining_stencils == 0
     except ExceededRemainingChoicesException:
         assert False
@@ -102,9 +102,9 @@ def test_max_extras(machine):
     machine.handle_pumpkin_choice("Mini Pumpkin")
     machine.handle_face_stencil_choice("next")
     for scoop in range(machine.MAX_EXTRAS - 1):
-        machine.handle_extra_choice("LED Candle")
+        machine.handle_extra_choice("Paint Kit")
     try:
-        machine.handle_extra_choice("LED Candle")
+        machine.handle_extra_choice("Paint Kit")
         assert machine.remaining_extras == 0
     except ExceededRemainingChoicesException:
         assert False
@@ -116,13 +116,13 @@ def test_max_extras(machine):
 def test_total_cost(machine):
     machine.reset()
     machine.handle_pumpkin_choice("Large Pumpkin")
-    machine.handle_face_stencil_choice("Scream Face")
+    machine.handle_face_stencil_choice("Spooky Face")
     machine.handle_face_stencil_choice("Toothy Face")
     machine.handle_face_stencil_choice("Happy Face")
     machine.handle_face_stencil_choice("next")
-    machine.handle_extra_choice("LED Candle")
+    machine.handle_extra_choice("Spooky Sound Effects")
     machine.handle_extra_choice("done")
-    assert machine.calculate_cost() == 6.25
+    assert machine.calculate_cost() == 7.25
 
 #UCID:hg345 DATE:10/23/2023
 # Test 7 - Total Sales (sum of costs) must be calculated properly (test case should have a few permutations of at least 3 valid pumpkins [hint parameterized tests])
@@ -131,21 +131,21 @@ def test_total_cost(machine):
 #Here two or more orders are used 
 def test_total_sales(machine):
 # First order
-    machine.handle_pumpkin_choice("Mini Pumpkin")
-    machine.handle_face_stencil_choice("Scream Face")
-    machine.handle_face_stencil_choice("Toothy Face")
+    machine.handle_pumpkin_choice("Small Pumpkin")
+    machine.handle_face_stencil_choice("Happy Face")
+    machine.handle_face_stencil_choice("Spooky Face")
     machine.handle_face_stencil_choice("next")
-    machine.handle_extra_choice("LED Candle")
+    machine.handle_extra_choice("Glitter")
     machine.handle_extra_choice("Dry Ice")
     first_pumpkin_cost = float(machine.calculate_cost())
     machine.currently_selecting = STAGE.Pay
     machine.handle_pay(first_pumpkin_cost, str(first_pumpkin_cost))
 # Second order
-    machine.handle_pumpkin_choice("Mini Pumpkin")
+    machine.handle_pumpkin_choice("Medium Pumpkin")
+    machine.handle_face_stencil_choice("Toothy Face")
     machine.handle_face_stencil_choice("Scream Face")
-    machine.handle_face_stencil_choice("Spooky Face")
     machine.handle_face_stencil_choice("next")
-    machine.handle_extra_choice("Googly Eyes")
+    machine.handle_extra_choice("Sticker Pack")
     machine.handle_extra_choice("done")
     second_pumpkin_cost = float(machine.calculate_cost())
     machine.handle_pay(second_pumpkin_cost, str(second_pumpkin_cost))
@@ -159,11 +159,11 @@ def test_total_sales(machine):
 def test_total_pumpkin(machine):
     machine.reset()
 #First order
-    machine.handle_pumpkin_choice("Small Pumpkin")
-    machine.handle_face_stencil_choice("Scream Face")
-    machine.handle_face_stencil_choice("Toothy Face")
+    machine.handle_pumpkin_choice("Large Pumpkin")
+    machine.handle_face_stencil_choice("Happy Face")
+    machine.handle_face_stencil_choice("Spooky Face")
     machine.handle_face_stencil_choice("next")
-    machine.handle_extra_choice("LED Candle")
+    machine.handle_extra_choice("Spooky Sound Effects")
     machine.handle_extra_choice("Dry Ice")
     first_pumpkin_cost = float(machine.calculate_cost())
     machine.currently_selecting = STAGE.Pay
@@ -171,10 +171,10 @@ def test_total_pumpkin(machine):
     assert machine.total_products == 1
     machine.reset()
 #Second order
-    machine.handle_pumpkin_choice("Medium Pumpkin")
-    machine.handle_face_stencil_choice("Happy Face")
+    machine.handle_pumpkin_choice("Mini Pumpkin")
+    machine.handle_face_stencil_choice("Spooky Face")
     machine.handle_face_stencil_choice("next")
-    machine.handle_extra_choice("Small Candle")
+    machine.handle_extra_choice("LED Candle")
     second_pumpkin_cost = float(machine.calculate_cost())
     machine.currently_selecting = STAGE.Pay
     machine.handle_pay(second_pumpkin_cost, str(second_pumpkin_cost))

@@ -174,8 +174,9 @@ class PumpkinMachine:
         print(f"Current Pumpkin: {', '.join([x.name for x in self.inprogress_pumpkin])}")
 
     def calculate_cost(self):
-     # Calculate the total cost of the in-progress pumpkin customization.
-     #UCID:hg345 Date:10/23/2023
+    # Calculate the total cost of the in-progress pumpkin customization.
+    # This method calculates the proper value of the inprogress_pumpkin array.
+    # UCID: hg345 Date: 10/23/2023
         total_cost = sum(item.cost for item in self.inprogress_pumpkin)
         return total_cost
 
@@ -198,7 +199,7 @@ class PumpkinMachine:
                 self.print_current_pumpkin()
             elif self.currently_selecting == STAGE.Pay:
                 expected = self.calculate_cost()
-                total = input(f"Your total is {expected}, please enter the exact value.\n")
+                total = input(f"Your total is ${expected}, please enter the exact value.\n") #input() message should properly display the value in currency format 
                 self.handle_pay(expected, total)
 
                 choice = input("What would you like to do? (order or quit)\n")
@@ -208,23 +209,30 @@ class PumpkinMachine:
         except KeyboardInterrupt:
             print("Quitting the pumpkin machine")
             sys.exit()
+        #UCID:hg345 DATE:10/23/2023
+        # Handling OutOfStockException and indicating the current stage/category
         except OutOfStockException as e:
-            print(f"{self.currently_selecting} is out of stock.")
+            print(f"{self.currently_selecting} is out of stock.") 
+        # Handling NeedsCleaningException
         except NeedsCleaningException as e:
             while True:
-                user_input = input("Type clean to clear the machine before using")
+                user_input = input("Type clean to clear the machine before using") 
                 if user_input.lower() == "clean":
                     self.clean_machine()
                     print("Machine has been cleaned.")
                     break
                 else:
                     continue
+        # Handling InvalidChoiceException and indicating the current stage/category
         except InvalidChoiceException as e:
-            print(f"{self.currently_selecting} has an invalid choice.")
+            print(f"{self.currently_selecting} has an invalid choice.") 
+        # Handling ExceededRemainingChoicesException and indicating the current stage/category     
         except ExceededRemainingChoicesException as e:
-            print(f"{self.currently_selecting} has exceeded remaining choices.")
+            print(f"{self.currently_selecting} has exceeded remaining choices.") 
+        # Handling InvalidPaymentException
         except InvalidPaymentException as e:
             print("Invalid payment.")
+        
         except Exception as e:
             print(f"Something went wrong and I didn't handle it: {e}")
 
