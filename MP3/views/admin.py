@@ -18,6 +18,10 @@ def importCSV():
             flash('No selected file', "warning")
             return redirect(request.url)
         # TODO importcsv-1 check that it's a .csv file, return a proper flash message if it's not and don't attempt to process the file
+        #hg345 - 12-11-2023
+        if file and not file.filename.lower().endswith('.csv'):
+            flash('Invalid file format. Please upload a CSV file.', "danger")
+            return redirect(request.url)
         if file and secure_filename(file.filename):
             organizations = []
             donations = []
@@ -55,17 +59,41 @@ def importCSV():
             # Note: this reads the file as a stream instead of requiring us to save it, don't modify/remove it
             stream = io.TextIOWrapper(file.stream._file, "UTF8", newline=None)
             # TODO importcsv-2 read the csv file stream as a dict
-            for row in ["this is a placeholder"]:
-                pass 
+            #hg345 - 12-11-2023
+            csv_data = csv.DictReader(stream)
+            for row in  csv_data:
+                pass
                 # print(row) #example
                 # TODO importcsv-3: extract organization data and append to organization list
                 # as a dict only with organization data if all organization fields are present (refer to above SQL)
-
+                organization_data = {
+                    "name": row["organization_name"],
+                    "address": row["organization_address"],
+                    "city": row["organization_city"],
+                    "country": row["organization_country"],
+                    "state": row["organization_state"],
+                    "zip": row["organization_zip"],
+                    "website": row["organization_website"],
+                    "description": row["organization_description"]
+                }
+                organizations.append(organization_data)
                 
                
                 # TODO importcsv-4: extract donation data and append to donation list
                 # as a dict only with donation data if all donation fields are present (refer to above SQL)
-
+                #hg345 - 12-11-2023
+                donation_data = {
+                    "donor_firstname": row["donor_name"].split()[0] if row["donor_name"] else '',
+                    "donor_lastname": row["donor_name"].split()[1] if row["donor_name"] else '',
+                    "donor_email": row["donor_email"],
+                    "item_name": row["item_name"],
+                    "item_description": row["item_description"],
+                    "quantity": int(row["item_quantity"]) if row["item_quantity"] and row["item_quantity"].isdigit() else 0,
+                    "organization_name": row["organization_name"],
+                    "donation_date": row["donation_date"] if row["donation_date"] else None,
+                    "comments": row["comments"]
+                }
+                donations.append(donation_data)
                 
                 
             if len(organizations) > 0:
@@ -73,22 +101,30 @@ def importCSV():
                 try:
                     result = DB.insertMany(organization_query, organizations)
                     # TODO importcsv-5 display flash message about number of organizations inserted
+                    #hg345 - 12-11-2023
+                    flash(f"Successfully inserted or updated {len(organizations)} organizations", "success")
                 except Exception as e:
                     traceback.print_exc()
                     flash("There was an error loading in the csv data", "danger")
             else:
                 # TODO importcsv-6 display flash message (info) that no organizations were loaded
+                #hg345 - 12-11-2023
+                flash("No organizations were loaded", "info")
                 pass
             if len(donations) > 0:
                 print(f"Inserting or updating {len(donations)} donations")
                 try:
                     result = DB.insertMany(donation_query, donations)
                     # TODO importcsv-7 display flash message about number of donations loaded
+                    #hg345 - 12-11-2023
+                    flash(f"Successfully inserted or updated {len(donations)} donations", "success")
                 except Exception as e:
                     traceback.print_exc()
                     flash("There was an error loading in the csv data", "danger")
             else:
                  # TODO importcsv-8 display flash message (info) that no donations were loaded
+                 #hg345 - 12-11-2023
+                flash("No donations were loaded", "info")
                 pass
             try:
                 result = DB.selectOne("SHOW SESSION STATUS LIKE 'questions'")
