@@ -154,13 +154,12 @@ class DB:
                 database = url.path.strip("/")
                 try:
                     DB.db = mysql.connector.connect(
-                        host=host, user=user, password=password, database=database, port=int(port))
+                        host=host, user=user, password=password, database=database, port=int(port)if port is not None else None)
                 except Error as e:
                     print("Error while connecting to MySQL", e)
                     raise e
             else:  # old logic as fallback
-                data = re.findall(
-                    "mysql://(\w+):(\w+)@([\w\.]+):([\d]+)/([\w]+)", db_url)
+                data = re.findall("mysql://(\\w+):(\\w+)@([\\w\\.]+):([\\d]+)/([\\w]+)", db_url)
                 if len(data) > 0:
                     data = data[0]
                     if len(data) >= 5:
