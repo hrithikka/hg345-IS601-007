@@ -58,10 +58,11 @@ Organization{% endblock %}
             {# use this for country/state selection #}
             {#hg345-12-11-2023#}
             <!-- country/state -->
-            <div class="mb-3">
+            <!--div class="mb-3">
                 <label for="country_state_selector" class="form-label">country/state</label>
             {{country_state_selector(country=org.country,state=org.state)}}
-            </div>
+            </div-->
+            {{country_state_selector(country=org.country,state=org.state)}}
             <!--zip-->
 
             <div class="mb-3">
