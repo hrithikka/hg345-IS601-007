@@ -20,11 +20,12 @@ def importCSV():
         # TODO importcsv-1 check that it's a .csv file, return a proper flash message if it's not and don't attempt to process the file
         #hg345 - 12-11-2023
         if file and not file.filename.lower().endswith('.csv'):
-            flash('Invalid file format. Please upload a CSV file.', "danger")
+            flash('Invalid file. Please Upload CSV File.', "danger")
             return redirect(request.url)
         if file and secure_filename(file.filename):
-            organizations = []
             donations = []
+            organizations = []
+
             # DON'T EDIT
             organization_query = """
             INSERT INTO IS601_MP3_Organizations (name, address, city, country, state, zip, website, description)
@@ -102,14 +103,14 @@ def importCSV():
                     result = DB.insertMany(organization_query, organizations)
                     # TODO importcsv-5 display flash message about number of organizations inserted
                     #hg345 - 12-11-2023
-                    flash(f"Successfully inserted or updated {len(organizations)} organizations", "success")
+                    flash(f"Successfully Inserted or Updated {len(organizations)} Organizations", "success")
                 except Exception as e:
                     traceback.print_exc()
-                    flash("There was an error loading in the csv data", "danger")
+                    flash("Error loading in the csv data", "danger")
             else:
                 # TODO importcsv-6 display flash message (info) that no organizations were loaded
                 #hg345 - 12-11-2023
-                flash("No organizations were loaded", "info")
+                flash("No Organizations Loaded", "info")
                 pass
             if len(donations) > 0:
                 print(f"Inserting or updating {len(donations)} donations")
@@ -117,19 +118,19 @@ def importCSV():
                     result = DB.insertMany(donation_query, donations)
                     # TODO importcsv-7 display flash message about number of donations loaded
                     #hg345 - 12-11-2023
-                    flash(f"Successfully inserted or updated {len(donations)} donations", "success")
+                    flash(f"Successfully Inserted or Updated {len(donations)} Donations", "success")
                 except Exception as e:
                     traceback.print_exc()
-                    flash("There was an error loading in the csv data", "danger")
+                    flash("Error Loading CSV Data", "danger")
             else:
                  # TODO importcsv-8 display flash message (info) that no donations were loaded
                  #hg345 - 12-11-2023
-                flash("No donations were loaded", "info")
+                flash("No donations Loaded", "info")
                 pass
             try:
                 result = DB.selectOne("SHOW SESSION STATUS LIKE 'questions'")
                 print(f"Result {result}")
             except Exception as e:
                     traceback.print_exc()
-                    flash("There was an error counting session queries", "danger")
+                    flash("Error Counting Session Queries", "danger")
     return render_template("upload.html")
