@@ -21,6 +21,7 @@ def client(app):
 
 @pytest.fixture(scope='module')
 def index(client):
+    
     resp = client.get("/")
     soup = BeautifulSoup(resp.data, "html.parser")
     return soup

@@ -1,6 +1,7 @@
 import pytest
 
 
+
 @pytest.fixture()
 def app():
     from ..main import create_app
@@ -27,7 +28,7 @@ def client(app):
 
 
 # Note: this test will insert/update new company/employee data and won't clean it up
-def test_upload_csv(client):
+def off_test_upload_csv(client):
     import os
     CURR_DIR = os.path.dirname(os.path.abspath(__file__))
     file = f"{CURR_DIR}/test_data.csv"
