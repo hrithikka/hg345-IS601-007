@@ -84,7 +84,7 @@ def search():
         else:
             flash("Limit number between 1 and 100", "error")
     except ValueError:
-        flash("Limit -> valid number", "error")
+        flash("Provide valid number", "error")
     
     #limit = 10 # TODO change this per the above requirements
     
@@ -169,7 +169,7 @@ def add():
         # TODO add-8 item_quantity is required and must be more than 0 (flash proper error message)
         #hg345 - 12-11-2023
         if not item_quantity or not item_quantity.isdigit() or int(item_quantity) <= 0:
-            flash("Item Quantity Positive integer", "error")
+            flash("Item Quantity Required i.e.>0", "error")
             return render_template("manage_donation.html", donation=request.form)
 
         # TODO add-9 donation_date is required and must be within the past 30 days
@@ -288,7 +288,7 @@ def edit():
             # TODO add-9 item_quantity is required and must be more than 0 (flash proper error message)
             #hg345 - 12-11-2023
             if not item_quantity or not item_quantity.isdigit() or int(item_quantity) <= 0:
-                flash("Item Quantity Positive integer", "error")
+                flash("Item Quantity Required i.e.>0", "error")
                 return render_template("manage_donation.html", donation=request.form)
 
             # TODO add-10 donation_date is required and must be within the past 30 days

@@ -10,17 +10,18 @@
         <div class="row">
             {# TODO
             build a horizontal filter/sort form with
+
             donor first name (show as first name, but name should be fn)
             donor last_name (show as last name, but name should be ln)
             donor email (validate as text, not email, so partial match works)
             item name
+
             organization (provided) (name is organization value is the id)
             sort/order (using allowed_columns and provided partial template)
             limit (default 10)
             ensure all fields prefill with request arg data if provided
             #}
-
-            {#hg345-12-11-2023#}
+            {#hg345 - 12-11-2023#}
             <!--first name-->
             <div class="col">
                 <label class="visually-hidden" for="donor_firstname">First Name</label>
@@ -46,6 +47,7 @@
                 <input type="text" name="item" class="form-control" id="item_name" placeholder="Item Name" value="{{ request.args.get('item') or '' }}">
             </div>
 
+
             <!--organization-->
             <div class="col">
                 <label class="visually-hidden"
@@ -54,11 +56,8 @@
             </div>
             <!-- sort filter -->
             {# TODO pass/set the columns that can be used for sort/filter (i.e. allowed_columns) #}
-            {#hg345-12-11-2023#}
-
-
+            {#hg345 - 12-11-2023#}
             {{ sort_filter(cols=allowed_columns) }}
-             
 
             <!--limit filter-->
             <div class="col">
@@ -83,8 +82,7 @@
                 {# generate th tags for each column to display #}
                 {# don't show any id or organization_id columns #}
                 {# IMPORTANT use table column names as the headings, replace _ with space via filter #}
-                {#hg345-12-11-2023#}
-
+                {#hg345 - 12-11-2023#}
                 <!-- add th elements -->
                 {% for column_name, value in rows[0].items() %}
                     {% if column_name not in ['id', 'organization_id'] %}
@@ -103,21 +101,21 @@
             an edit button that passes the donation id to donation edit
             a delete button that passes the donation id and the request args to the donation delete route
             #}
-            {#hg345-12-11-2023#}
+            {#hg345 - 12-11-2023#}
             <!-- iterate over rows and generate proper tr and td elements with the data -->
             {% for row in rows %}
-            <tr>
-                {% for column_name,value in row.items() %}
-                    {% if column_name not in ['id', 'organization_id'] %}
-                        <td>{{ value }}</td>
-                    {% endif %}
-                {% endfor %}
-                <td>
-                    <a href="{{ url_for('donations.edit', id=row['id']) }}" class="btn btn-primary">Edit</a>
-                    <a href="{{ url_for('donations.delete', id=row['id'], **request.args) }}" class="btn btn-danger">Delete</a>
-                </td>
-            </tr>
-        {% endfor %}
+                <tr>
+                    {% for column_name,value in row.items() %}
+                        {% if column_name not in ['id', 'organization_id'] %}
+                            <td>{{ value }}</td>
+                        {% endif %}
+                    {% endfor %}
+                    <td>
+                        <a href="{{ url_for('donations.edit', id=row['id']) }}" class="btn btn-primary">Edit</a>
+                        <a href="{{ url_for('donations.delete', id=row['id'], **request.args) }}" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
 
         </tbody>
         {% else %}
