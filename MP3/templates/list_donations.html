@@ -50,12 +50,15 @@
             <div class="col">
                 <label class="visually-hidden"
                     for="organization">Organization</label>
-                {{organization_dropdown(request.args.get("organization"))}}
+                {{organization_dropdown(request.args.get("organization_id"))}}
             </div>
             <!-- sort filter -->
             {# TODO pass/set the columns that can be used for sort/filter (i.e. allowed_columns) #}
             {#hg345-12-11-2023#}
-            {{sort_filter(cols=allowed_columns)}}
+
+
+            {{ sort_filter(cols=allowed_columns) }}
+             
 
             <!--limit filter-->
             <div class="col">
