@@ -15,14 +15,33 @@
             limit (default 10)
             ensure all fields prefill with request arg data if provided
             #}
+            {#hg345-12-11-2023#}
             <!--name filter-->
+            <div class="col">
+                <label class="visually-hidden" for="name">Organization Name</label>
+                <input type="text" name="name" class="form-control" id="name" placeholder="Organization Name" value="{{ request.args.get('name') or '' }}">
+            </div>
 
             <!-- country state filter-->
             {{country_state_selector(layout="horizontal")}}
             <!-- sort filter -->
             {# TODO pass/set the columns that can be used for sort/filter (i.e. allowed_columns) #}
-            {{sort_filter(cols=[])}}
+            {#hg345-12-11-2023#}
+            {{sort_filter(cols=allowed_columns)}}
             <!--limit filter-->
+            <div class="col">
+                <label class="visually-hidden"
+                    for="limit">Limit</label>
+                    <input type="number" name="limit" class="form-control" id="limit"  value="{{ request.args.get('limit',10) }}">
+                
+            </div>
+
+            <div class="col">
+                <label class="visually-hidden"
+                    for="limit">Limit</label>
+                    <input type="number" name="limit" class="form-control" id="limit"  value="{{ request.args.get('limit',10) }}">
+                
+            </div>
 
             <div class="col">
                 <input type="submit" class="btn btn-primary" value="Filter" />
@@ -40,7 +59,13 @@
                     {# generate th tags for each column to display #}
                     {# don't show any id or organization_id columns #}
                     {# IMPORTANT use table column names as the headings, replace _ with space via filter #}
+                    {#hg345-12-11-2023#}
                     <!-- add th elements -->
+                    {% for column in allowed_columns %}
+                        {% if column[0] not in ['id', 'organization_id'] %}
+                            <th>{{ column[1]|replace("_", " ") }}</th>
+                        {% endif %}
+                    {% endfor %}
 
                     <!-- keep this -->
                     <th>Actions</th>
@@ -57,7 +82,28 @@
                 an edit button that passes the organization id to organization edit
                 a delete button that passes the organization id and the request args to the organization delete route
                 #}
+                {#hg345-12-11-2023#}
                 <!-- iterate over rows and generate proper tr and td elements with the data -->
+                {% for row in rows %}
+                    <tr>
+                        {% for column in allowed_columns %}
+                            {% if column[0] not in ['id', 'organization_id'] %}
+                                <td>
+                                    {% if column[0] == 'website' %}
+                                    {{ row[column[0]] }}
+                                    {% else %}
+                                        {{ row[column[0]] }}
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                        <td>
+                            <a href="{{ url_for('donations.search', organization_id=row['id']) }}" class="btn btn-info">View Donations</a>
+                            <a href="{{ url_for('organization.edit', id=row['id']) }}" class="btn btn-primary">Edit</a>
+                            <a href="{{ url_for('organization.delete', id=row['id'], **request.args) }}" class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
 
             </tbody>
             {% else %}
