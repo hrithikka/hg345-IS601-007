@@ -88,10 +88,10 @@ def search():
         result = DB.selectAll(query, args)
         if result.status:
             rows = result.rows
-            #print(f"rows: {rows}")
+            print(f"rows: {rows}")
     except Exception as e:
         # TODO search-11 make message user friendly
-        flash(e, "error")
+        flash(f"Error Occured try modifying search:{e}", "error")
     # hint: use allowed_columns in template to generate sort dropdown
     # hint2: convert allowed_columns into a list of tuples representing (value, label)
     # do this prior to passing to render_template, but not before otherwise it can break validation
