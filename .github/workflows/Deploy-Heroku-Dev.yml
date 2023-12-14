@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - dev
-      - flak-profile
+      - Flak-Profile
 
 # Your workflows jobs.
 jobs:
