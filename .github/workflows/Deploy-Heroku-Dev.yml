@@ -6,8 +6,8 @@ name: Deploy to heroku dev.
 on:
   push:
     branches:
-      #-  dev
-      - Flak-Profile
+      -  dev
+      #- Flak-Profile
 
 # Your workflows jobs.
 jobs:
