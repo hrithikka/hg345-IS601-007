@@ -1,0 +1,127 @@
+{% extends "layout.html" %}
+{% block title %}Donations{% endblock %}
+{% block content %}
+{% from "organization_dropdown.html" import organization_dropdown %}
+{% from "sort_filter.html" import sort_filter %}
+<div class="container-fluid">
+    <div class="h1 text-center">{{organization_name}}
+
+        Donations</div>
+    <form method="GET">
+        <div class="row">
+            {# TODO
+            build a horizontal filter/sort form with
+            donor first name (show as first name, but name should be fn)
+            donor last_name (show as last name, but name should be ln)
+            donor email (validate as text, not email, so partial match works)
+            item name
+            organization (provided) (name is organization value is the id)
+            sort/order (using allowed_columns and provided partial template)
+            limit (default 10)
+            ensure all fields prefill with request arg data if provided
+            #}
+
+            {#hg345 - 12-11-2023#}
+            <!--first name-->
+            <div class="col">
+                <label class="visually-hidden" for="donor_firstname">First Name</label>
+                <input type="text" name="fn" class="form-control" id="donor_firstname" placeholder="Donor First Name" value="{{ request.args.get('fn') or '' }}">
+            </div>
+
+            <!--last name-->
+            <div class="col">
+                <label class="visually-hidden" for="donor_last_name">Last Name</label>
+                <input type="text" name="ln" class="form-control" id="donor_last_name" placeholder="Donor Last Name" value="{{ request.args.get('ln') or ''}}">
+            </div>
+
+            <!--email-->
+            <div class="col">
+                <label class="visually-hidden" for="donor_email">Email</label>
+                <input type="text" name="email" class="form-control" id="donor_email" placeholder="Donor Email" value="{{ request.args.get('email') or ''}}">
+            </div>
+
+
+            <!-- item name-->
+            <div class="col">
+                <label class="visually-hidden" for="item_name">Item Name</label>
+                <input type="text" name="item" class="form-control" id="item_name" placeholder="Item Name" value="{{ request.args.get('item') or '' }}">
+            </div>
+            <!--organization-->
+            <div class="col">
+                <label class="visually-hidden"
+                    for="organization">Organization</label>
+                {{organization_dropdown(request.args.get("organization_id"))}}
+            </div>
+            <!-- sort filter -->
+            {# TODO pass/set the columns that can be used for sort/filter (i.e. allowed_columns) #}
+            {#hg345 - 12-11-2023#}
+            {{ sort_filter(cols=allowed_columns) }}
+            <!--limit filter-->
+            <div class="col">
+                <label class="visually-hidden"
+                    for="limit">Limit</label>
+                    <input type="number" name="limit" class="form-control" id="limit"  value="{{ request.args.get('limit',10) }}">
+                
+            </div>
+            <div class="col">
+                <input type="submit" class="btn btn-primary" value="Filter" />
+            </div>
+            <div class="col">
+                <a href="?" class="btn btn-secondary">Reset</a>
+
+            </div>
+        </div>
+    </form>
+    <table class="table">
+        {% if rows and rows|length > 0 %}
+        <thead>
+            <tr class="text-capitalize">
+                {# generate th tags for each column to display #}
+                {# don't show any id or organization_id columns #}
+                {# IMPORTANT use table column names as the headings, replace _ with space via filter #}
+                {#hg345 - 12-11-2023#}
+                <!-- add th elements -->
+                {% for column_name, value in rows[0].items() %}
+                    {% if column_name not in ['id', 'organization_id'] %}
+                        <th>{{ column_name | replace("_", " ") }}</th>
+                    {% endif %}
+                {% endfor %}
+
+                <!-- keep this -->
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {# generate tr with td tags for each piece of data #}
+            {# don't show any id or organization_id columns #}
+            {# in the last column add the following
+            an edit button that passes the donation id to donation edit
+            a delete button that passes the donation id and the request args to the donation delete route
+            #}
+            {#hg345 - 12-11-2023#}
+            <!-- iterate over rows and generate proper tr and td elements with the data -->
+            {% for row in rows %}
+                <tr>
+                    {% for column_name,value in row.items() %}
+                        {% if column_name not in ['id', 'organization_id'] %}
+                            <td>{{ value }}</td>
+                        {% endif %}
+                    {% endfor %}
+                    <td>
+                        <a href="{{ url_for('donations.edit', id=row['id']) }}" class="btn btn-primary">Edit</a>
+                        <a href="{{ url_for('donations.delete', id=row['id'], **request.args) }}" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </tbody>
+        {% else %}
+        <tbody>
+            <tr>
+                <td colspan="100%">No results to show</td>
+            </tr>
+        </tbody>
+        {% endif %}
+    </table>
+</div>
+{% endblock %}
