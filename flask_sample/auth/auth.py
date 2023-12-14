@@ -30,7 +30,7 @@ def register():
             if result.status:
                 flash("Successfully registered","success")
         except Exception as e:
-            flash("The chosen email is already used", "danger")
+            flash("The chosen username is not available", "danger")
     return render_template("register.html", form=form)
 
 @auth.route("/login", methods=["GET", "POST"])
