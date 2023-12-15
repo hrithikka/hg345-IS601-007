@@ -1,4 +1,4 @@
-<!Doctype html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -21,22 +21,29 @@
             margin: 0;
             display: flex;
             flex-direction: column;
+            background-color: #f8f9fa; /* background color */
         }
 
         #content {
             flex: 1;
             overflow-y: auto;
-            border: 1px solid rgb(44, 5, 63);
+            border: 1px solid rgb(28, 3, 40);
+            background-color: #ffffff; /*  background color */
+            padding: 20px; /* padding for better readability */
         }
 
         .footer {
             height: 60px;
             line-height: 60px;
+            background-color: #343a40; /* background color for the footer */
+            color: #ffffff; /* text color for the footer */
         }
 
         .header {
-            
             line-height: 40px;
+            background-color: #460a7a; /* background color for the header */
+            color: #ffffff; /*text color for the header */
+            padding: 10px; /* padding for better spacing */
         }
 
         label {
@@ -53,7 +60,7 @@
         {% include 'flash.html' %}
     </div>
     <div id="content">{% block content %}{% endblock %}</div>
-    <div id="footer" class="footer bg-light text-center">
+    <div id="footer" class="footer text-center">
         {% block footer %}
         &copy; Copyright 2023.
         {% endblock %}
