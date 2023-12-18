@@ -1,0 +1,120 @@
+{% extends "layout.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
+    h1 {
+        text-align: center;
+    }
+    .movieList {
+        list-style: none;
+        padding: 0;
+        margin-top: 10px;
+    }
+    .movie {
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    img {
+        max-width: 80px;
+        margin-right: 10px;
+    }
+
+    #fetchMoviesBtn {
+            padding: 10px;
+            background-color: #3d0865;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+    }
+    .updateButton,
+    .deleteButton {
+        padding: 8px;
+        background-color: #3d0865; 
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        text-decoration:none
+    }
+
+   
+</style>
+    <h1>Favourite Movies List</h1>
+
+    <ul class="movieList">
+        {% for media in media_list %}
+            <li class="movie">
+                <div>
+                    <h3>{{ media.title }}</h3>
+                    <p><strong>IMDb Rating:</strong> {{ media.imdbrating }}</p>
+                    <p><strong>Released:</strong> {{ media.released }}</p>
+                    <a href="/movies/{{ media.id }}"  class="updateButton">Update</a>
+                    <a name="{{ media.id }}" onclick="deleteMedia(name)" class="deleteButton">Delete</a>
+                    <a name="{{ media.id }}" onclick="removeFavourite(name)" class="deleteButton">Remove as favourite</a>
+                    <!-- Add other details as needed -->
+                </div>
+                <img src="{{ media.imageURL }}" alt="{{ media.title }}">
+            </li>
+        {% endfor %}
+    </ul>
+
+    <script>
+    function deleteMedia(id) {
+        const endpoint = `/movies/${id}`;
+        console.log(endpoint)
+        if (confirm('Are you sure you want to delete this media?')) {
+            // Send a DELETE request using JavaScript's fetch API
+            fetch(endpoint, {
+                method: 'DELETE',
+                headers: new Headers({'content-type': 'application/json'}),
+            })
+            .then(response => {
+                if (response.ok) {
+                    // If the deletion was successful, reload the page to reflect the changes
+                    window.location.reload();
+                } else {
+                    // Handle the case where deletion was not successful
+                    console.error('Failed to delete media');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    }
+
+    function removeFavourite(id) {
+        const endpoint = `/favourites/${id}`;
+        console.log(endpoint);
+
+        // Send a POST request to add the movie as a favorite
+        fetch(endpoint, {
+            method: 'DELETE',
+            headers: new Headers({'content-type': 'application/json', 'Cookie' : document.cookie}),
+        })
+        .then(response => {
+            if (response.ok) {
+                // Handle the case where adding as a favorite was successful (you can update UI or provide feedback to the user)
+                console.log('Movie removed as a favorite');
+                window.location.reload()
+            } else {
+                // Handle the case where adding as a favorite was not successful
+                console.error('Failed to remove movie as a favorite');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>
+
+    {% endblock %}
