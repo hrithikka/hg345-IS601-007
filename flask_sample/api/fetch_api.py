@@ -1,5 +1,11 @@
 import os
 import sys
+from dotenv import load_dotenv
+import requests
+from movies import movies
+from flask import redirect, Blueprint
+from roles.permissions import admin_permission
+from sql.db import DB
 # Get the parent directory of the current script (api.py)
 CURR_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -16,6 +22,7 @@ api = Blueprint('api', __name__, url_prefix='/api')
 
 
 @api.route('/fetch', methods=['GET'])
+@admin_permission.require(http_exception=403)
 def fetch_media():
 
     load_dotenv()
