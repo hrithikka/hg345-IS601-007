@@ -54,9 +54,9 @@
     <a href="/api/fetch" id="fetchMoviesBtn">Fetch Movies</a>
     <a href="/movies/add" id="fetchMoviesBtn">Add New Movie</a>
 
-
     <ul class="movieList">
         {% for movie in movie_list %}
+            <div class="movieDiv">
             <li class="movie">
                 <div>
                     <h3>{{ movie.title }}</h3>
@@ -75,7 +75,9 @@
                 </div>
                 <img src="{{ movie.imageURL }}" alt="{{ movie.title }}">
             </li>
+        </div>
         {% endfor %}
+
     </ul>
 
     <script>

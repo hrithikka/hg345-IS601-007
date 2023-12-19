@@ -50,6 +50,12 @@
 </style>
     <h1>Favourite Movies List</h1>
 
+    <div>
+        <input type="text" id="searchInput" placeholder="Search...">
+        <button onclick="searchMovies()" id="searchButton">Search</button>
+        <button onclick="sortMovies()" id="sortButton">Sort</button>
+    </div>
+
     <ul class="movieList">
         {% for media in media_list %}
             <li class="movie">
@@ -60,7 +66,7 @@
                     <a href="/movies/{{ media.id }}"  class="updateButton">Update</a>
                     <a name="{{ media.id }}" onclick="deleteMedia(name)" class="deleteButton">Delete</a>
                     <a name="{{ media.id }}" onclick="removeFavourite(name)" class="deleteButton">Remove as favourite</a>
-                    <!-- Add other details as needed -->
+                    
                 </div>
                 <img src="{{ media.imageURL }}" alt="{{ media.title }}">
             </li>
@@ -68,6 +74,36 @@
     </ul>
 
     <script>
+    function searchMovies() {
+        const searchInput = document.getElementById('searchInput').value.toLowerCase();
+        const movieList = document.querySelectorAll('.movie');
+
+        movieList.forEach(movie => {
+            const title = movie.querySelector('h3').innerText.toLowerCase();
+            const displayStyle = title.includes(searchInput) ? 'flex' : 'none';
+            movie.style.display = displayStyle;
+        });
+    }
+
+    function sortMovies() {
+        const movieList = document.querySelector('.movieList');
+        const movies = Array.from(movieList.children);
+
+        // Sort movies based on title (you can modify this logic based on your needs)
+        movies.sort((a, b) => {
+            const titleA = a.querySelector('h3').innerText.toLowerCase();
+            const titleB = b.querySelector('h3').innerText.toLowerCase();
+            return titleA.localeCompare(titleB);
+        });
+
+        // Remove existing movies from the list
+        movieList.innerHTML = '';
+
+        // Append sorted movies to the list
+        movies.forEach(movie => {
+            movieList.appendChild(movie);
+        });
+    }
     function deleteMedia(id) {
         const endpoint = `/movies/${id}`;
         console.log(endpoint)
