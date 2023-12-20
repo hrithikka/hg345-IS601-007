@@ -1,0 +1,193 @@
+{% extends "layout.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
+    h1 {
+        text-align: center;
+    }
+    .movieList {
+        list-style: none;
+        padding: 0;
+        margin-top: 10px;
+    }
+    .movie {
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    img {
+        max-width: 80px;
+        margin-right: 10px;
+    }
+
+    #fetchMoviesBtn {
+            padding: 10px;
+            background-color: #3d0865;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            text-decoration:none
+    }
+    .updateButton,
+    .deleteButton,.detailsButton {
+        padding: 8px;
+        background-color: #3d0865; 
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        text-decoration:none
+    }
+
+    
+</style>
+    <h1>Movies List</h1>
+
+    <a href="/api/fetch" id="fetchMoviesBtn">Fetch Movies</a>
+    <a href="/movies/add" id="fetchMoviesBtn">Add New Movie</a>
+
+    <div>
+        <input type="text" id="searchInput" placeholder="Search...">
+        <button onclick="searchMovies()" id="searchButton">Search</button>
+        <button onclick="sortMovies()" id="sortButton">Sort</button>
+    </div>
+
+    <ul class="movieList">
+        {% for movie in movie_list %}
+            <div class="movieDiv">
+            <li class="movie">
+                <div>
+                    <h3>{{ movie.title }}</h3>
+                    <p><strong>IMDb Rating:</strong> {{ movie.imdbrating }}</p>
+                    <p><strong>Released:</strong> {{ movie.released }}</p>
+                    <a href="/movies/details/{{ movie.id }}" class="detailsButton">Details</a>
+                    <a href="/movies/{{ movie.id }}"  class="updateButton">Update</a>
+                    <a name="{{ movie.id }}" onclick="deletemovie(name)" class="deleteButton">Delete</a>
+                    {% if movie.is_favourite %}
+                        <a name="{{ movie.id }}" onclick="removeFavourite(name)" class="deleteButton">Remove as favourite</a>
+                    {% else %}
+                        <a name="{{ movie.id }}" onclick="addFavourite(name)" class="deleteButton">Add as favourite</a>
+                    {% endif %}
+                    
+                    
+                </div>
+                <img src="{{ movie.imageURL }}" alt="{{ movie.title }}">
+            </li>
+        </div>
+        {% endfor %}
+
+    </ul>
+
+    <script>
+    function searchMovies() {
+        const searchInput = document.getElementById('searchInput').value.toLowerCase();
+        const movieList = document.querySelectorAll('.movie');
+
+        movieList.forEach(movie => {
+            const title = movie.querySelector('h3').innerText.toLowerCase();
+            const displayStyle = title.includes(searchInput) ? 'flex' : 'none';
+            movie.style.display = displayStyle;
+        });
+    }
+
+    function sortMovies() {
+        const movieList = document.querySelector('.movieList');
+        const movies = Array.from(movieList.children);
+
+        // Sort movies based on title (you can modify this logic based on your needs)
+        movies.sort((a, b) => {
+            const titleA = a.querySelector('h3').innerText.toLowerCase();
+            const titleB = b.querySelector('h3').innerText.toLowerCase();
+            return titleA.localeCompare(titleB);
+        });
+
+        // Remove existing movies from the list
+        movieList.innerHTML = '';
+
+        // Append sorted movies to the list
+        movies.forEach(movie => {
+            movieList.appendChild(movie);
+        });
+    }
+    function deletemovie(id) {
+        const endpoint = `/movies/${id}`;
+        console.log(endpoint)
+        if (confirm('Are you sure you want to delete this movie?')) {
+            // Send a DELETE request using JavaScript's fetch API
+            fetch(endpoint, {
+                method: 'DELETE',
+                headers: new Headers({'content-type': 'application/json'}),
+            })
+            .then(response => {
+                if (response.ok) {
+                    // If the deletion was successful, reload the page to reflect the changes
+                    window.location.reload();
+                } else {
+                    // Handle the case where deletion was not successful
+                    console.error('Failed to delete movie');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    }
+
+    function addFavourite(id) {
+        const endpoint = `/favourites/${id}`;
+        console.log(endpoint);
+
+        // Send a POST request to add the movie as a favorite
+        fetch(endpoint, {
+            method: 'POST',
+            headers: new Headers({'content-type': 'application/json', 'Cookie' : document.cookie}),
+        })
+        .then(response => {
+            if (response.ok) {
+                // Handle the case where adding as a favorite was successful (you can update UI or provide feedback to the user)
+                console.log('Movie added as a favorite');
+                window.location.reload()
+            } else {
+                // Handle the case where adding as a favorite was not successful
+                console.error('Failed to add movie as a favorite');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+    function removeFavourite(id) {
+        const endpoint = `/favourites/${id}`;
+        console.log(endpoint);
+
+        // Send a POST request to add the movie as a favorite
+        fetch(endpoint, {
+            method: 'DELETE',
+            headers: new Headers({'content-type': 'application/json', 'Cookie' : document.cookie}),
+        })
+        .then(response => {
+            if (response.ok) {
+                // Handle the case where adding as a favorite was successful (you can update UI or provide feedback to the user)
+                console.log('Movie removed as a favorite');
+                window.location.reload()
+            } else {
+                // Handle the case where adding as a favorite was not successful
+                console.error('Failed to remove movie as a favorite');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>
+
+    {% endblock %}

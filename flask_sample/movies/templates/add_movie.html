@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% block title %}Add Movie{% endblock %}
+{% block content %}
+<style>
+    
+    h1 {
+        text-align: center;
+    }
+    .updateForm {
+        border: 1px solid #ccc;
+        padding: 20px;
+        margin-top: 20px;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    label {
+        display: block;
+        margin-bottom: 10px;
+    }
+    input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+    }
+    button {
+        padding: 10px;
+        background-color: #2d0435;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+</style>
+<h1>Add New Movie</h1>
+
+<div class="updateForm">
+    <form method="POST" action="{{ url_for('movies.add_movie') }}">
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+        {{ form.imageURL.label }}
+        {{ form.imageURL }}
+        {{ form.genre.label }}
+        {{ form.genre }}
+        {{ form.title.label }}
+        {{ form.title }}
+        {{ form.imdbrating.label }}
+        {{ form.imdbrating }}
+        {{ form.released.label }}
+        {{ form.released }}
+        {{ form.type.label }}
+        {{ form.type }}
+        {{ form.synopsis.label }}
+        {{ form.synopsis }}
+
+        <button type="submit">Add Movie</button>
+    </form>
+</div>
+
+
+{% endblock %}
