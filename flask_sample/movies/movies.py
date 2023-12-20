@@ -121,7 +121,7 @@ def update_movie(id):
 @admin_permission.require(http_exception=403)
 def delete_movie(id):
     # Check if the record with the IMDb ID exists
-    print("hello world")
+    #print("Hello world")
     record = DB.selectOne("SELECT * FROM movies WHERE id = %s", id)
     if record.row:
         DB.delete("DELETE FROM favourites WHERE movie_id = %s", id)
