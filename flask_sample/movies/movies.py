@@ -60,6 +60,12 @@ def add_movie():
         data = request.form
 
         # Perform validation on the form data as needed
+          # Check if the movie already exists in the database
+        existing_movie = DB.selectOne("SELECT * FROM movies WHERE title = %s", data['title'])
+
+        if existing_movie:
+            flash("Movie with the same title already exists", "danger")
+            return render_template('add_movie.html', form=form)
 
         # Insert the new movie record into the database
         result = DB.insertOne(
