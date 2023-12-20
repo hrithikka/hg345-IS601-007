@@ -1,4 +1,6 @@
 from flask import Blueprint, flash, render_template, request, redirect, url_for,session,jsonify
+import requests
+from movies.forms import MovieForm
 from sql.db import DB # Import your DB class
 from roles.permissions import admin_permission
 from flask_login import current_user, login_required
@@ -49,14 +51,21 @@ def movie_details(id):
 @movies.route('/add', methods=['GET', 'POST'])
 @admin_permission.require(http_exception=403)
 def add_movie():
+    form = MovieForm()
     if request.method == 'GET':
         # Render the form for adding a new movie
-        return render_template('add_movie.html')
+        return render_template('add_movie.html',form=form)
     elif request.method == 'POST':
         # Process the form submission for adding a new movie
         data = request.form
 
         # Perform validation on the form data as needed
+          # Check if the movie already exists in the database
+        existing_movie = DB.selectOne("SELECT * FROM movies WHERE title = %s", data['title'])
+
+        if existing_movie:
+            flash("Movie with the same title already exists", "danger")
+            return render_template('add_movie.html', form=form)
 
         # Insert the new movie record into the database
         result = DB.insertOne(
@@ -67,7 +76,7 @@ def add_movie():
         if result.status:
             flash("Movie added successfully", "success")
             # Redirect to the movies listing page after adding
-            return jsonify({"message": "Added"}), 200
+            return redirect("/movies")
         else:
             flash(result.message, "danger")
             # Redirect to the movies listing page even if there's an error
@@ -75,6 +84,7 @@ def add_movie():
 
 
 @movies.route('/<string:id>', methods=['GET', 'PUT'])
+@admin_permission.require(http_exception=403)
 def update_movie(id):
     if request.method == 'GET':
         # Retrieve the movie record from the database
