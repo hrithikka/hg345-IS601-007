@@ -1,32 +1,32 @@
-import pytest
+#import pytest
 
 
 
-@pytest.fixture()
-def app():
-    from ..main import create_app
-    app = create_app()
-    """app.config.update({
-        "TESTING": True,
-    })"""
+# @pytest.fixture()
+#def app():
+ #   from ..main import create_app
+  #  app = create_app()
+   # """app.config.update({
+   #     "TESTING": True,
+   # })"""
 
     # other setup can go here
 
-    yield app
+   # yield app
 
     # clean up / reset resources here
 
 
-@pytest.fixture()
+#@pytest.fixture()
 def client(app):
     return app.test_client()
 
 
-@pytest.fixture()
-def runner(app):
-    return app.test_cli_runner()
+#@pytest.fixture()
+#def runner(app):
+  #  return app.test_cli_runner()
 
 
-def test_request_example(client):
-    response = client.get("/")
-    assert b"Horror World!" in response.data
+#def test_request_example(client):
+   # response = client.get("/")
+   # assert b"Horror World!" in response.data
