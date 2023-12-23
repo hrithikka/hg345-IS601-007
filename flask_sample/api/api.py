@@ -160,7 +160,7 @@ class API:
 
 if __name__ == "__main__":
     # example using https://rapidapi.com/alphavantage/api/alpha-vantage
-    querystring = {"page": 1}
+    querystring = { "genre": "horror"}
     
     resp = API.get("/advancedsearch", querystring)
     print(resp)
