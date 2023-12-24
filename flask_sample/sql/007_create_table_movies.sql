@@ -7,7 +7,6 @@ CREATE TABLE movies (
     title VARCHAR(255),
     imdbrating DECIMAL(5, 2),
     released INT,
-    `language` VARCHAR(255),
     `type` VARCHAR(255) NOT NULL,
     synopsis TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
