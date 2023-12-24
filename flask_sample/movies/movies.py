@@ -78,22 +78,22 @@ def add_movie():
 
 @movies.route('/<string:id>', methods=['GET', 'PUT'])
 @admin_permission.require(http_exception=403)
-def update_movie(id):
+def update_media(id):
     if request.method == 'GET':
-        # Retrieve the movie record from the database
+        # Retrieve the media record from the database
         record = DB.selectOne(
             "SELECT * FROM movies WHERE id = %s", id)
 
         # Check if the record with the IMDb ID exists
         if record:
-            return render_template('movie_update.html', movie=record.row)
+            return render_template('movie_update.html', media=record.row)
         else:
-            return jsonify({"message": "movie not found"}), 404
+            return jsonify({"message": "Media not found"}), 404
     elif request.method == 'PUT':
-        # Process the form submission for updating movie
+        # Process the form submission for updating media
         data = request.form
         print(data.get('imdbrating'))
-        # Update the movie record in the database
+        # Update the media record in the database
         result = DB.update(
             "UPDATE movies SET imageURL=%s, genre=%s, title=%s, imdbrating=%s, released=%s, type=%s, synopsis=%s WHERE id=%s",
             data.get('imageURL'), data.get('genre'), data.get(
@@ -101,14 +101,14 @@ def update_movie(id):
             data.get('released'), data.get('type'), data.get('synopsis'), id)
 
         if result.status:
-            flash("movie updated successfully", "success")
+            flash("Media updated successfully", "success")
             return jsonify({"message": "Updated"}), 200
+
             # Redirect to the movies listing page after updating
 
         else:
             flash(result.message, "danger")
             # Redirect to the movies listing page even if there's an error
-
 
 @movies.route('/<string:id>', methods=['DELETE'])
 @admin_permission.require(http_exception=403)
