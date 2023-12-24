@@ -1,8 +1,32 @@
 {% extends "layout.html" %}
 {% block title %}Landing Page{% endblock %}
 {% block content %}
+<style>
+    .container-fluid {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .h3 {
+        
+        margin-bottom: 20px;
+    }
+
+    .description {
+        margin-top: 20px;
+        font-style: italic;
+    }
+</style>
+
 <div class="container-fluid">
-    <div class="h3">Welcome</div>
+    <div class="h3">Hello Horror Lover!!!!</div>
+    <p class="description">
+        Dive into the world of horror movies and experience spine-chilling excitement like never before. Discover a curated collection of your favorite horror films and enjoy the thrill. Don't forget to sign in to add movies to your favorites and enhance your horror movie journey!
+    </p>
+    
     {{current_user.username}}
 </div>
 {% endblock %}

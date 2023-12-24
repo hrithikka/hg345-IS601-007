@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block title %}Movie Details{% endblock %}
+{% block content %}
+<style>
+    .content-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    h1 {
+        
+        margin-bottom: 20px;
+    }
+
+    h2, p {
+        margin: 8px 0;
+    }
+
+    img {
+        max-width: 200px;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="content-container">
+    <h1>Movie Details</h1>
+
+    <h2>{{ movie.title }}</h2>
+    <p><strong>Genre:</strong> {{ movie.genre }}</p>
+    <p><strong>IMDb Rating:</strong> {{ movie.imdbrating }}</p>
+    <p><strong>Released:</strong> {{ movie.released }}</p>
+    <p><strong>IMDB ID:</strong> {{ movie.imdb_id }}</p>
+    <p><strong>Synopsis:</strong> {{ movie.synopsis }}</p>
+    <img src="{{ movie.imageURL }}" alt="{{ movie.title }}">
+</div>
+
+{% endblock %}

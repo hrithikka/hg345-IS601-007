@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+{% block title %}Update Media{% endblock %}
+{% block content %}
+<style>
+    
+    h1 {
+        text-align: center;
+    }
+    .updateForm {
+        border: 1px solid #ccc;
+        padding: 20px;
+        margin-top: 20px;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    label {
+        display: block;
+        margin-bottom: 10px;
+    }
+    input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+    }
+    button {
+        padding: 10px;
+        background-color: #007BFF;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+</style>
+<h1>Update Media</h1>
+
+<div class="updateForm">
+    <form id="updateMediaForm">
+        <label for="imageURL">Image URL:</label>
+        <input type="text" id="imageURL" name="imageURL" value="{{ media.imageURL }}" required>
+
+        <label for="genre">Genre:</label>
+        <input type="text" id="genre" name="genre" value="{{ media.genre }}" required>
+
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" value="{{ media.title }}" required>
+
+        <label for="imdbrating">IMDb Rating:</label>
+        <input type="text" id="imdbrating" name="imdbrating" value="{{ media.imdbrating }}" required>
+
+        <label for="released">Released:</label>
+        <input type="text" id="released" name="released" value="{{ media.released }}" required>
+
+        <label for="type">Type:</label>
+        <input type="text" id="type" name="type" value="{{ media.type }}" required>
+
+        <label for="synopsis">Synopsis:</label>
+        <textarea id="synopsis" name="synopsis" rows="4" required>{{ media.synopsis }}</textarea>
+
+        <button type="button" onclick="updateMovie()">Update Media</button>
+    </form>
+</div>
+
+<script>
+    function updateMovie() {
+    // Get the form data
+        var formData = {
+            imageURL: document.getElementById('imageURL').value,
+            genre: document.getElementById('genre').value,
+            title: document.getElementById('title').value,
+            imdbrating: document.getElementById('imdbrating').value,
+            released: document.getElementById('released').value,
+            type: document.getElementById('type').value,
+            synopsis: document.getElementById('synopsis').value
+        };
+
+        // Make an AJAX request to the Flask endpoint
+        fetch('/movies/{{media.id}}', {
+            method: 'PUT',
+            body: new URLSearchParams(formData),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response from the server
+            if (data.message) {
+                alert(data.message);
+            } else {
+                // Redirect to the movies listing page after successful update
+                window.location.href = '/movies';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+</script>
+
+{% endblock %}
