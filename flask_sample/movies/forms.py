@@ -1,7 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, DecimalField, DateField, TextAreaField, SubmitField, IntegerField
-from wtforms.validators import DataRequired, URL, Length, Optional, NumberRange, EqualTo,ValidationError
-#hg345 12-19-2023
+from wtforms.validators import DataRequired, URL, Length, Optional, NumberRange, EqualTo, ValidationError
 # Custom validator for genre
 def validate_genre(form, field):
     if field.data != "horror":
