@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block title %}Add Movie{% endblock %}
 {% block content %}
+<!-- hg345 12-19-2023 -->
 <style>
     h1 {
         text-align: center;
@@ -37,7 +38,6 @@
     }
 </style>
 <h1>Add New Movie</h1>
-
 <div class="updateForm">
     <form method="POST" action="{{ url_for('movies.add_movie') }}">
         {{ form.hidden_tag() }}
