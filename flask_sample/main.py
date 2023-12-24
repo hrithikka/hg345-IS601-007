@@ -45,6 +45,8 @@ def create_app(config_filename=''):
         app.register_blueprint(api)
         from favourites.favourites import favourites
         app.register_blueprint(favourites)
+        from users.users import users
+        app.register_blueprint(users)
 
         # load the extension
         principals = Principal(app) # must be defined/initialized for identity to work (flask_principal)

@@ -18,6 +18,8 @@ def get_favourites():
     return render_template("favourite_list.html", media_list=movies.rows)
 
 
+
+
 @favourites.route('/<string:movie_id>', methods=['POST'])
 def add_favourites(movie_id):
     user_id = session.get('_user_id')
