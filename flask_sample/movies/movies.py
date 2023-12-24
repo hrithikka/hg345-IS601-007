@@ -47,60 +47,53 @@ def movie_details(id):
     else:
         return jsonify({"message": "Movie not found"}), 404
 
-
+#hg345 12-19-2023
 @movies.route('/add', methods=['GET', 'POST'])
 @admin_permission.require(http_exception=403)
 def add_movie():
     form = MovieForm()
-    if request.method == 'GET':
-        # Render the form for adding a new movie
-        return render_template('add_movie.html',form=form)
-    elif request.method == 'POST':
-        # Process the form submission for adding a new movie
-        data = request.form
+    if request.method == 'POST' and form.validate_on_submit():
+        # Check if the movie already exists in the database
+        existing_movie = DB.selectOne("SELECT * FROM movies WHERE title = %s", form.title.data)
 
-        # Perform validation on the form data as needed
-          # Check if the movie already exists in the database
-        existing_movie = DB.selectOne("SELECT * FROM movies WHERE title = %s", data['title'])
+        if not existing_movie:
+            # Movie with the same title does not exist, proceed with insertion
+            # Insert the new movie record into the database
+            result = DB.insertOne(
+                "INSERT INTO movies (imageURL, genre, title, imdbrating, released, type, synopsis) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                form.imageURL.data, form.genre.data, form.title.data,
+                form.imdbrating.data, form.released.data, form.type.data, form.synopsis.data)
 
-        if existing_movie:
-            flash("Movie with the same title already exists", "danger")
-            return render_template('add_movie.html', form=form)
-
-        # Insert the new movie record into the database
-        result = DB.insertOne(
-            "INSERT INTO movies (imageURL, genre, title, imdbrating, released, type, synopsis) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-            data.get('imageURL'), data.get('genre'), data.get('title'),
-            data.get('imdbrating'), data.get('released'), data.get('type'), data.get('synopsis'))
-
-        if result.status:
-            flash("Movie added successfully", "success")
-            # Redirect to the movies listing page after adding
-            return redirect("/movies")
+            if result.status:
+                flash("Movie added successfully", "success")
+                # Redirect to the movies listing page after adding
+                return redirect("/movies")
+            else:
+                flash(result.message, "danger")
         else:
-            flash(result.message, "danger")
-            # Redirect to the movies listing page even if there's an error
-            return jsonify({"message": "Adding failed"}), 404
+            # Movie with the same title already exists
+            flash("Movie with the same title already exists", "danger")
+    return render_template('add_movie.html', form=form)
 
 
 @movies.route('/<string:id>', methods=['GET', 'PUT'])
 @admin_permission.require(http_exception=403)
-def update_movie(id):
+def update_media(id):
     if request.method == 'GET':
-        # Retrieve the movie record from the database
+        # Retrieve the media record from the database
         record = DB.selectOne(
             "SELECT * FROM movies WHERE id = %s", id)
 
         # Check if the record with the IMDb ID exists
         if record:
-            return render_template('movie_update.html', movie=record.row)
+            return render_template('movie_update.html', media=record.row)
         else:
-            return jsonify({"message": "movie not found"}), 404
+            return jsonify({"message": "Media not found"}), 404
     elif request.method == 'PUT':
-        # Process the form submission for updating movie
+        # Process the form submission for updating media
         data = request.form
         print(data.get('imdbrating'))
-        # Update the movie record in the database
+        # Update the media record in the database
         result = DB.update(
             "UPDATE movies SET imageURL=%s, genre=%s, title=%s, imdbrating=%s, released=%s, type=%s, synopsis=%s WHERE id=%s",
             data.get('imageURL'), data.get('genre'), data.get(
@@ -108,14 +101,14 @@ def update_movie(id):
             data.get('released'), data.get('type'), data.get('synopsis'), id)
 
         if result.status:
-            flash("movie updated successfully", "success")
+            flash("Media updated successfully", "success")
             return jsonify({"message": "Updated"}), 200
+
             # Redirect to the movies listing page after updating
 
         else:
             flash(result.message, "danger")
             # Redirect to the movies listing page even if there's an error
-
 
 @movies.route('/<string:id>', methods=['DELETE'])
 @admin_permission.require(http_exception=403)
