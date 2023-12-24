@@ -47,12 +47,11 @@ def movie_details(id):
     else:
         return jsonify({"message": "Movie not found"}), 404
 
-
+#hg345 12-19-2023
 @movies.route('/add', methods=['GET', 'POST'])
 @admin_permission.require(http_exception=403)
 def add_movie():
     form = MovieForm()
-
     if request.method == 'POST' and form.validate_on_submit():
         # Check if the movie already exists in the database
         existing_movie = DB.selectOne("SELECT * FROM movies WHERE title = %s", form.title.data)

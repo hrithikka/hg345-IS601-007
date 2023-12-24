@@ -59,6 +59,9 @@
         <button onclick="searchMovies()" id="searchButton">Search</button>
         <button onclick="sortMovies()" id="sortButton">Sort</button>
     </div>
+    <div id="searchNotFoundMessage" style="display: none;">
+        No results found.
+    </div>
 
     <ul class="movieList">
         {% for movie in movie_list %}
@@ -82,6 +85,7 @@
                 <img src="{{ movie.imageURL }}" alt="{{ movie.title }}">
             </li>
         </div>
+        
         {% endfor %}
 
     </ul>
@@ -91,12 +95,22 @@
         const searchInput = document.getElementById('searchInput').value.toLowerCase();
         const movieList = document.querySelectorAll('.movie');
 
+        let noResultsFound = true;
+
         movieList.forEach(movie => {
             const title = movie.querySelector('h3').innerText.toLowerCase();
             const displayStyle = title.includes(searchInput) ? 'flex' : 'none';
             movie.style.display = displayStyle;
+
+            if (displayStyle === 'flex') {
+                noResultsFound = false;
+            }
         });
+
+        const searchNotFoundMessage = document.getElementById('searchNotFoundMessage');
+        searchNotFoundMessage.style.display = noResultsFound ? 'block' : 'none';
     }
+
 
     function sortMovies() {
         const movieList = document.querySelector('.movieList');
