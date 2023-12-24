@@ -52,22 +52,12 @@ def movie_details(id):
 @admin_permission.require(http_exception=403)
 def add_movie():
     form = MovieForm()
-    if request.method == 'GET':
-        # Render the form for adding a new movie
-        return render_template('add_movie.html', form=form)
-    elif request.method == 'POST':
-        # Process the form submission for adding a new movie
-        data = request.form
 
-        # Perform validation on the form data as needed
+    if request.method == 'POST' and form.validate_on_submit():
         # Check if the movie already exists in the database
         existing_movie = DB.selectOne("SELECT * FROM movies WHERE title = %s", form.title.data)
 
-        print("Form Title:", form.title.data)
-        print("Existing Movie:", existing_movie)
-
-        # Access the 'rows' attribute of the DBResponse object
-        if not existing_movie.rows:
+        if not existing_movie:
             # Movie with the same title does not exist, proceed with insertion
             # Insert the new movie record into the database
             result = DB.insertOne(
@@ -75,22 +65,16 @@ def add_movie():
                 form.imageURL.data, form.genre.data, form.title.data,
                 form.imdbrating.data, form.released.data, form.type.data, form.synopsis.data)
 
-            print("Insert Result:", result)
-
             if result.status:
                 flash("Movie added successfully", "success")
                 # Redirect to the movies listing page after adding
                 return redirect("/movies")
             else:
                 flash(result.message, "danger")
-                # Redirect to the movies listing page even if there's an error
-                return jsonify({"message": "Adding failed"}), 404
         else:
             # Movie with the same title already exists
             flash("Movie with the same title already exists", "danger")
-            return render_template('add_movie.html', form=form)
-
-
+    return render_template('add_movie.html', form=form)
 
 
 @movies.route('/<string:id>', methods=['GET', 'PUT'])
