@@ -26,7 +26,7 @@
     }
     button {
         padding: 10px;
-        background-color: #007BFF;
+        background-color: #1d031d;
         color: #fff;
         border: none;
         cursor: pointer;
@@ -35,65 +35,52 @@
 </style>
 <h1>Update movie</h1>
 
-<div class="updateForm">
-    <form id="updatemovieForm">
-        <label for="imageURL">Image URL:</label>
-        <input type="text" id="imageURL" name="imageURL" value="{{ movie.imageURL }}" required>
+<form id="updatemovieForm">
+    <label for="imageURL">Image URL:</label>
+    <input type="text" id="imageURL" name="imageURL" value="{{ movie.imageURL }}" required>
 
-        <label for="genre">Genre:</label>
-        <input type="text" id="genre" name="genre" value="{{ movie.genre }}" required>
+    <label for="genre">Genre:</label>
+    <input type="text" id="genre" name="genre" value="{{ movie.genre }}" required>
 
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="title" value="{{ movie.title }}" required>
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" value="{{ movie.title }}" required>
 
-        <label for="imdbrating">IMDb Rating:</label>
-        <input type="text" id="imdbrating" name="imdbrating" value="{{ movie.imdbrating }}" required>
+    <label for="imdbrating">IMDb Rating:</label>
+    <input type="text" id="imdbrating" name="imdbrating" value="{{ movie.imdbrating }}" required pattern="^\d{1,2}(\.\d{1,2})?$">
+    <span class="error" id="imdbrating-error">Please enter a valid IMDb rating (e.g., 7.5 or 10).</span>
 
-        <label for="released">Released:</label>
-        <input type="text" id="released" name="released" value="{{ movie.released }}" required>
+    <label for="released">Released:</label>
+    <input type="text" id="released" name="released" value="{{ movie.released }}" required pattern="^\d{4}$">
+    <span class="error" id="released-error">Please enter a valid year in YYYY format.</span>
 
-        <label for="type">Type:</label>
-        <input type="text" id="type" name="type" value="{{ movie.type }}" required>
+    
 
-        <label for="synopsis">Synopsis:</label>
-        <textarea id="synopsis" name="synopsis" rows="4" required>{{ movie.synopsis }}</textarea>
+    <label for="type">Type:</label>
+    <input type="text" id="type" name="type" value="{{ movie.type }}" required>
 
-        <button type="button" onclick="updateMovie()">Update movie</button>
-    </form>
-</div>
+    <label for="synopsis">Synopsis:</label>
+    <textarea id="synopsis" name="synopsis" rows="4" required>{{ movie.synopsis }}</textarea>
+
+    <button type="button" onclick="validateAndSubmit()">Update movie</button>
+</form>
 
 <script>
-    function updateMovie() {
-    // Get the form data
-        var formData = {
-            imageURL: document.getElementById('imageURL').value,
-            genre: document.getElementById('genre').value,
-            title: document.getElementById('title').value,
-            imdbrating: document.getElementById('imdbrating').value,
-            released: document.getElementById('released').value,
-            type: document.getElementById('type').value,
-            synopsis: document.getElementById('synopsis').value
-        };
+    function validateAndSubmit() {
+    // Validation logic for Released Date (valid year)
+    var releasedInput = document.getElementById('released');
+    var releasedError = document.getElementById('released-error');
+    var yearPattern = /^\d{4}$/;
+    if (!yearPattern.test(releasedInput.value)) {
+        releasedError.style.display = 'block'; // Display error message
+        return;
+    } else {
+        releasedError.style.display = 'none'; // Hide error message
+    }
 
-        // Make an AJAX request to the Flask endpoint
-        fetch('/movies/{{movie.id}}', {
-            method: 'PUT',
-            body: new URLSearchParams(formData),
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Handle the response from the server
-            if (data.message) {
-                alert(data.message);
-            } else {
-                // Redirect to the movies listing page after successful update
-                window.location.href = '/movies';
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+    // If all validation passes, submit the form
+    updateMovie();
 }
+
 </script>
 
 {% endblock %}
